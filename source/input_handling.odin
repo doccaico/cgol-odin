@@ -31,6 +31,7 @@ is_btn_pressed :: proc(game: ^Game, btn: Button_Kind) -> bool {
 
 input_handling :: proc(game: ^Game) {
 	if rl.IsKeyPressed(.R) || is_btn_pressed(game, .Randomize) {
+		game.is_btn_pressed_and_should_refresh = true
 		randomize_grid(game)
 	}
 	if rl.IsKeyPressed(.P) || is_btn_pressed(game, .Pause_And_Unpause) {
@@ -43,6 +44,8 @@ input_handling :: proc(game: ^Game) {
 		game.delay = math.min(MAX_DELAY, game.delay + DELAY_VALUE)
 	}
 	if rl.IsKeyPressed(.A) || is_btn_pressed(game, .Rand_Alive_Color) {
+		game.is_btn_pressed_and_should_refresh = true
+
 		color: rl.Color
 		color[0] = u8(rl.GetRandomValue(0, 255))
 		color[1] = u8(rl.GetRandomValue(0, 255))
@@ -51,6 +54,8 @@ input_handling :: proc(game: ^Game) {
 		game.alive_color = color
 	}
 	if rl.IsKeyPressed(.D) || is_btn_pressed(game, .Rand_Dead_Color) {
+		game.is_btn_pressed_and_should_refresh = true
+
 		color: rl.Color
 		color[0] = u8(rl.GetRandomValue(0, 255))
 		color[1] = u8(rl.GetRandomValue(0, 255))

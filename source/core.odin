@@ -1,6 +1,5 @@
 package game
 
-import "core:fmt"
 import "core:math/rand"
 import rl "vendor:raylib"
 
@@ -26,20 +25,21 @@ State :: enum u8 {
 }
 
 Game :: struct {
-	grid:                  [GRID_Y][GRID_X]State,
-	temp_grid:             [GRID_Y][GRID_X]State,
-	is_pause:              bool,
-	delay:                 f32,
-	timer:                 f32,
-	render_target:         rl.RenderTexture2D,
-	btn_randomize:         Button,
-	btn_pause_and_unpause: Button,
-	btn_speed_up:          Button,
-	btn_speed_down:        Button,
-	btn_rand_alive_color:  Button,
-	btn_rand_dead_color:   Button,
-	alive_color:           rl.Color,
-	dead_color:            rl.Color,
+	grid:                              [GRID_Y][GRID_X]State,
+	temp_grid:                         [GRID_Y][GRID_X]State,
+	is_pause:                          bool,
+	is_btn_pressed_and_should_refresh: bool,
+	delay:                             f32,
+	timer:                             f32,
+	render_target:                     rl.RenderTexture2D,
+	btn_randomize:                     Button,
+	btn_pause_and_unpause:             Button,
+	btn_speed_up:                      Button,
+	btn_speed_down:                    Button,
+	btn_rand_alive_color:              Button,
+	btn_rand_dead_color:               Button,
+	alive_color:                       rl.Color,
+	dead_color:                        rl.Color,
 }
 
 randomize_grid :: proc(game: ^Game) {

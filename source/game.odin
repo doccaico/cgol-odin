@@ -1,5 +1,6 @@
 package game
 
+import "core:fmt"
 import "core:math/rand"
 import "core:time"
 import rl "vendor:raylib"
@@ -27,9 +28,8 @@ draw_grid :: proc(game: ^Game) {
 }
 
 game_init :: proc(game: ^Game) {
-	rand.reset(cast(u64)time.to_unix_nanoseconds(time.now()), context.random_generator)
-
 	game.is_pause = true
+	game.is_btn_pressed_and_should_refresh = false
 	game.delay = INITIAL_DELAY
 	game.timer = 0.0
 	game.alive_color = rl.GREEN
@@ -70,26 +70,27 @@ shutdown :: proc() {
 	rl.CloseWindow()
 }
 
-
 update :: proc() {
 	input_handling(&game)
 
 	dt := rl.GetFrameTime()
-	should_update_cells := false
+	should_refresh := false
 
 	if !game.is_pause {
 		game.timer += dt
 		if game.timer >= game.delay {
 			game.timer = 0.0
-			should_update_cells = true
+			should_refresh = true
 		}
 	}
 
-	if should_update_cells || rl.IsKeyPressed(.R) || rl.IsKeyPressed(.A) || rl.IsKeyPressed(.D) {
+	if should_refresh || game.is_btn_pressed_and_should_refresh {
+		if game.is_btn_pressed_and_should_refresh do game.is_btn_pressed_and_should_refresh = false
+
 		rl.BeginTextureMode(game.render_target)
 
 		// 時間経過による自動更新のときだけ、世代を進める
-		if should_update_cells {
+		if should_refresh {
 			update_grid(&game)
 		}
 

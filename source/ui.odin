@@ -5,7 +5,7 @@ import "core:slice"
 import rl "vendor:raylib"
 
 BTN_WIDTH: i32 : WINDOW_WIDTH / 3
-BTN_HEIGHT: i32 : 64
+BTN_HEIGHT: i32 : 80
 BTN_SPAN: i32 : 4
 BTN_FONT_SIZE: i32 : 18
 
@@ -114,7 +114,7 @@ ui_init :: proc(game: ^Game) {
 }
 
 ui_draw :: proc(game: ^Game) {
-	SPACE: i32 : 18
+	SPACE: i32 : 26
 	// Randomize
 	{
 		x, y := i32(game.btn_randomize.bounds.x), i32(game.btn_randomize.bounds.y)
