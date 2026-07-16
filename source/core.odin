@@ -50,7 +50,7 @@ randomize_grid :: proc(game: ^Game) {
 	}
 }
 
-count_neighbors :: proc(grid: ^[GRID_Y][GRID_X]State, x: int, y: int) -> int {
+count_neighbors :: #force_inline proc(grid: ^[GRID_Y][GRID_X]State, x: int, y: int) -> int {
 	count := 0
 	for dy := -1; dy <= 1; dy += 1 {
 		for dx := -1; dx <= 1; dx += 1 {

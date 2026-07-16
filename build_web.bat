@@ -18,7 +18,7 @@ REM call %EMSCRIPTEN_SDK_DIR%\emsdk_env.bat
 set "release_flags="
 
 if "%~1"=="--release" (
-    set "release_flags=-o:size"
+    set "release_flags=-o:size -no-bounds-check -disable-assert"
 )
 
 :: Note that there is a rayGUI equivalent: -define:RAYGUI_WASM_LIB=env.o

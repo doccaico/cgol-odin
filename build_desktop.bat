@@ -8,7 +8,7 @@ set "flags="
 if "%~1"=="--debug" (
     set "flags=-debug"
 ) else if "%~1"=="--release" (
-    set "flags=-o:speed -subsystem:windows"
+    set "flags=-o:speed -no-bounds-check -disable-assert -subsystem:windows"
 )
 
 odin build source\main_desktop %flags% -strict-style -out:%OUT_DIR%\game_desktop.exe

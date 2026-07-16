@@ -113,7 +113,7 @@ ui_init :: proc(game: ^Game) {
 	}
 }
 
-ui_draw :: proc(game: ^Game) {
+draw_ui :: proc(game: ^Game) {
 	SPACE: i32 : 26
 	// Randomize
 	{
