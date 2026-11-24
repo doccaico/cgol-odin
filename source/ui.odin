@@ -1,7 +1,5 @@
 package game
 
-import "core:fmt"
-import "core:slice"
 import rl "vendor:raylib"
 
 BTN_WIDTH: i32 : WINDOW_WIDTH / 3
@@ -117,9 +115,8 @@ draw_ui :: proc(game: ^Game) {
 	SPACE: i32 : 26
 	// Randomize
 	{
-		x, y := i32(game.btn_randomize.bounds.x), i32(game.btn_randomize.bounds.y)
-		width, height :=
-			i32(game.btn_randomize.bounds.width), i32(game.btn_randomize.bounds.height)
+		y := i32(game.btn_randomize.bounds.y)
+		width := i32(game.btn_randomize.bounds.width)
 		text_width := game.btn_randomize.text_width
 		rl.DrawRectangleLinesEx(game.btn_randomize.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(
@@ -132,10 +129,8 @@ draw_ui :: proc(game: ^Game) {
 	}
 	// Pause/Unpause
 	{
-		x, y := i32(game.btn_pause_and_unpause.bounds.x), i32(game.btn_pause_and_unpause.bounds.y)
-		width, height :=
-			i32(game.btn_pause_and_unpause.bounds.width),
-			i32(game.btn_pause_and_unpause.bounds.height)
+		y := i32(game.btn_pause_and_unpause.bounds.y)
+		width := i32(game.btn_pause_and_unpause.bounds.width)
 		text_width := game.btn_pause_and_unpause.text_width
 		rl.DrawRectangleLinesEx(game.btn_pause_and_unpause.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(
@@ -148,8 +143,8 @@ draw_ui :: proc(game: ^Game) {
 	}
 	// Speed Up
 	{
-		x, y := i32(game.btn_speed_up.bounds.x), i32(game.btn_speed_up.bounds.y)
-		width, height := i32(game.btn_speed_up.bounds.width), i32(game.btn_speed_up.bounds.height)
+		y := i32(game.btn_speed_up.bounds.y)
+		width := i32(game.btn_speed_up.bounds.width)
 		text_width := game.btn_speed_up.text_width
 		rl.DrawRectangleLinesEx(game.btn_speed_up.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(
@@ -162,9 +157,8 @@ draw_ui :: proc(game: ^Game) {
 	}
 	// Speed Down
 	{
-		x, y := i32(game.btn_speed_down.bounds.x), i32(game.btn_speed_down.bounds.y)
-		width, height :=
-			i32(game.btn_speed_down.bounds.width), i32(game.btn_speed_down.bounds.height)
+		y := i32(game.btn_speed_down.bounds.y)
+		width := i32(game.btn_speed_down.bounds.width)
 		text_width := game.btn_speed_down.text_width
 		rl.DrawRectangleLinesEx(game.btn_speed_down.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(
@@ -177,10 +171,8 @@ draw_ui :: proc(game: ^Game) {
 	}
 	// Rand ALIVE Color
 	{
-		x, y := i32(game.btn_rand_alive_color.bounds.x), i32(game.btn_rand_alive_color.bounds.y)
-		width, height :=
-			i32(game.btn_rand_alive_color.bounds.width),
-			i32(game.btn_rand_alive_color.bounds.height)
+		y := i32(game.btn_rand_alive_color.bounds.y)
+		width := i32(game.btn_rand_alive_color.bounds.width)
 		text_width := game.btn_rand_alive_color.text_width
 		rl.DrawRectangleLinesEx(game.btn_rand_alive_color.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(
@@ -193,9 +185,8 @@ draw_ui :: proc(game: ^Game) {
 	}
 	// Rand DEAD Color
 	{
-		x, y := i32(game.btn_rand_dead_color.bounds.x), i32(game.btn_rand_dead_color.bounds.y)
-		width, height :=
-			i32(game.btn_rand_dead_color.bounds.width), i32(game.btn_rand_dead_color.bounds.height)
+		y := i32(game.btn_rand_dead_color.bounds.y)
+		width := i32(game.btn_rand_dead_color.bounds.width)
 		text_width := game.btn_rand_dead_color.text_width
 		rl.DrawRectangleLinesEx(game.btn_rand_dead_color.bounds, 2, BTN_LINE_COLOR)
 		rl.DrawText(

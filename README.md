@@ -20,8 +20,11 @@ $ build\game_desktop.exe
 # build and run in one line
 $ call build_desktop.bat && build\game_desktop.exe
 
-# debug build (for checking memory leaks)
+# debug build
 $ build_desktop.bat --debug
+
+# check
+$ build_desktop.bat --check
 
 # release build
 $ build_desktop.bat --release

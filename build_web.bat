@@ -1,13 +1,8 @@
 @echo off
 
-:: Point this to where you installed emscripten.
-REM set EMSCRIPTEN_SDK_DIR=C:\Langs\emsdk
-set OUT_DIR=web
+set OUT_DIR=www
 
 if not exist %OUT_DIR% mkdir %OUT_DIR%
-
-REM set EMSDK_QUIET=1
-REM call %EMSCRIPTEN_SDK_DIR%\emsdk_env.bat
 
 :: Note RAYLIB_WASM_LIB=env.o -- env.o is an internal WASM object file. You can
 :: see how RAYLIB_WASM_LIB is used inside <odin>/vendor/raylib/raylib.odin.
@@ -22,14 +17,15 @@ if "%~1"=="--release" (
 )
 
 :: Note that there is a rayGUI equivalent: -define:RAYGUI_WASM_LIB=env.o
-odin build source\main_web %release_flags% -target:js_wasm32 -build-mode:obj -define:RAYLIB_WASM_LIB=env.o -strict-style -out:%OUT_DIR%\game.wasm.obj
+odin build source\main_web %release_flags% -target:js_wasm32 -build-mode:obj -define:RAYLIB_WASM_LIB=env.o -strict-style -out:%OUT_DIR%\game.wasm.o
 IF %ERRORLEVEL% NEQ 0 exit /b 1
 
 for /f "delims=" %%i in ('odin root') do set "ODIN_PATH=%%i"
 
 copy "%ODIN_PATH%\core\sys\wasm\js\odin.js" "%OUT_DIR%"
 
-set files=%OUT_DIR%\game.wasm.obj "%ODIN_PATH%\vendor\raylib\wasm\libraylib.web.a" "%ODIN_PATH%\vendor\raylib\wasm\libraygui.a"
+:: Note that there is a rayGUI equivalent: "%ODIN_PATH%\vendor\raylib\wasm\libraygui.a"
+set files=%OUT_DIR%\game.wasm.o "%ODIN_PATH%\vendor\raylib\wasm\libraylib.web.a"
 
 :: index_template.html contains the javascript code that calls the procedures in
 :: source/main_web/main_web.odin
@@ -45,6 +41,6 @@ if "%~1"=="--release" (
 :: it does not run the lines that follow it.
 cmd /c emcc -o %OUT_DIR%\index.html %files% %flags%
 
-del %OUT_DIR%\game.wasm.obj
+del %OUT_DIR%\game.wasm.o
 
 echo Web build created in %OUT_DIR%

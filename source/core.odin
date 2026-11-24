@@ -1,89 +1,51 @@
 package game
 
 import "core:math/rand"
-import rl "vendor:raylib"
-
-TILE_SIZE: i32 : 2
-
-// 生存セルの割合
-ALIVE_RATIO: f32 : 0.40
-// 更新する間にはさむ時間(大きいほどゆっくり更新する)
-INITIAL_DELAY: f32 : 0.15
-// DELAYの最大値
-MAX_DELAY: f32 : 0.25
-// DELAYの最小値
-MIN_DELAY: f32 : 0.05
-// 加減算する時の値(それぞれ最大で4段階ずつ)
-DELAY_VALUE: f32 : 0.025
-
-GRID_X :: int(WINDOW_WIDTH / TILE_SIZE)
-GRID_Y :: int(WINDOW_HEIGHT / TILE_SIZE - (BTN_HEIGHT / TILE_SIZE * 2))
-
-State :: enum u8 {
-	Dead  = 0,
-	Alive = 1,
-}
-
-Game :: struct {
-	grid:                              [GRID_Y][GRID_X]State,
-	temp_grid:                         [GRID_Y][GRID_X]State,
-	is_pause:                          bool,
-	is_btn_pressed_and_should_refresh: bool,
-	delay:                             f32,
-	timer:                             f32,
-	render_target:                     rl.RenderTexture2D,
-	btn_randomize:                     Button,
-	btn_pause_and_unpause:             Button,
-	btn_speed_up:                      Button,
-	btn_speed_down:                    Button,
-	btn_rand_alive_color:              Button,
-	btn_rand_dead_color:               Button,
-	alive_color:                       rl.Color,
-	dead_color:                        rl.Color,
-}
 
 randomize_grid :: proc(game: ^Game) {
-	for y := 0; y < GRID_Y; y += 1 {
-		for x := 0; x < GRID_X; x += 1 {
-			game.grid[y][x] = (rand.float32_range(0, 1) < ALIVE_RATIO) ? .Alive : .Dead
-		}
+	alive_count := GRID_SIZE * INITIAL_ALIVES / 100
+	for i := 0; i < alive_count; i += 1 {
+		game.main_grid[i] = .Alive
 	}
+	for i := alive_count; i < GRID_SIZE; i += 1 {
+		game.main_grid[i] = .Dead
+	}
+	rand.shuffle(game.main_grid[:])
 }
 
-count_neighbors :: #force_inline proc(grid: ^[GRID_Y][GRID_X]State, x: int, y: int) -> int {
+count_neighbors :: #force_inline proc(game: ^Game, x: int, y: int) -> int {
 	count := 0
 	for dy := -1; dy <= 1; dy += 1 {
 		for dx := -1; dx <= 1; dx += 1 {
-			if dx == 0 && dy == 0 do continue
+			if dx == 0 && dy == 0 {
+				continue
+			}
 
 			nx := x + dx
 			ny := y + dy
 
 			if nx >= 0 && nx < GRID_X && ny >= 0 && ny < GRID_Y {
-				if grid[ny][nx] == .Alive do count += 1
+				i := ny * GRID_X + nx
+				if game.main_grid[i] == .Alive {
+					count += 1
+				}
 			}
 		}
 	}
 	return count
 }
 
-update_grid :: proc(game: ^Game) {
+step :: proc(game: ^Game) {
 	for y := 0; y < GRID_Y; y += 1 {
 		for x := 0; x < GRID_X; x += 1 {
-			neighbors := count_neighbors(&game.grid, x, y)
-			current_state := game.grid[y][x]
+			neighbors := count_neighbors(game, x, y)
+			i := y * GRID_X + x
+			current_state := game.main_grid[i]
 
-			if current_state == .Alive {
-				game.temp_grid[y][x] = (neighbors <= 1 || neighbors >= 4) ? .Dead : .Alive
-			} else {
-				game.temp_grid[y][x] = (neighbors == 3) ? .Alive : .Dead
-			}
+			game.temp_grid[i] =
+				.Alive if neighbors == 3 || (current_state == .Alive && neighbors == 2) else .Dead
 		}
 	}
-	// 次世代のデータを現在のデータにコピー
-	for y := 0; y < GRID_Y; y += 1 {
-		for x := 0; x < GRID_X; x += 1 {
-			game.grid[y][x] = game.temp_grid[y][x]
-		}
-	}
+	// Swap only the pointer addresses in O(1) time (avoiding a full copy of all elements)
+	game.main_grid, game.temp_grid = game.temp_grid, game.main_grid
 }
