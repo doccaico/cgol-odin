@@ -86,9 +86,9 @@ init_game :: proc(game: ^Game) {
 
 	ui_init(game)
 	randomize_grid(game)
+	update_cell_texture(game)
 
 	rl.BeginTextureMode(game.render_target)
-	update_cell_texture(game)
 
 	// Instead of using a large number of quadrilaterals,
 	// a single generated texture is stretched to the size of the screen and rendered
@@ -98,6 +98,7 @@ init_game :: proc(game: ^Game) {
 	rl.DrawTexturePro(game.cell_texture, src_rec, dest_rec, origin, 0, rl.WHITE)
 
 	draw_ui(game)
+
 	rl.EndTextureMode()
 }
 
@@ -146,8 +147,6 @@ update :: proc() {
 	if should_refresh || game.is_btn_pressed_and_should_refresh {
 		if game.is_btn_pressed_and_should_refresh do game.is_btn_pressed_and_should_refresh = false
 
-		rl.BeginTextureMode(game.render_target)
-
 		// Advance the generation only during automatic updates triggered by the passage of time
 		if should_refresh {
 			step(&game)
@@ -155,13 +154,13 @@ update :: proc() {
 
 		update_cell_texture(&game)
 
+		rl.BeginTextureMode(game.render_target)
+
 		// Enlarged rendering of cell textures
 		src_rec := rl.Rectangle{0, 0, f32(GRID_X), f32(GRID_Y)}
 		dest_rec := rl.Rectangle{0, 0, f32(GRID_X) * f32(TILE_SIZE), f32(GRID_Y) * f32(TILE_SIZE)}
 		origin := rl.Vector2{0, 0}
 		rl.DrawTexturePro(game.cell_texture, src_rec, dest_rec, origin, 0, rl.WHITE)
-
-		draw_ui(&game)
 
 		rl.EndTextureMode()
 	}
@@ -178,6 +177,8 @@ update :: proc() {
 	dest_rec := rl.Rectangle{0, 0, f32(WINDOW_WIDTH), f32(WINDOW_HEIGHT)}
 	origin := rl.Vector2{0, 0}
 	rl.DrawTexturePro(game.render_target.texture, src_rec, dest_rec, origin, 0.0, rl.WHITE)
+
+	draw_ui(&game)
 
 	rl.EndDrawing()
 }

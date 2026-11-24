@@ -8,14 +8,19 @@ set "flags="
 if "%~1"=="--debug" (
     set "flags=-debug"
 ) else if "%~1"=="--check" (
-    set "flags=-debug -vet -vet-style -strict-style "
-    odin check source\main_desktop %flags%
-    exit /b %ERRORLEVEL%
+    odin check ^
+        source ^
+        source\main_desktop ^
+        source\main_web ^
+        -workspace -debug -no-entry-point -vet -vet-style -strict-style
+    if %ERRORLEVEL% NEQ 0 exit /b %ERRORLEVEL%
+    echo 💓 Check passed with no errors or warnings! 💓
+    exit /b 0
 ) else if "%~1"=="--release" (
     set "flags=-o:speed -no-bounds-check -disable-assert -subsystem:windows"
 )
 
 odin build source\main_desktop %flags% -out:%OUT_DIR%\game_desktop.exe
-IF %ERRORLEVEL% NEQ 0 exit /b 1
+if %ERRORLEVEL% NEQ 0 exit /b 1
 
 echo Desktop build created in %OUT_DIR%
